@@ -18,6 +18,12 @@ def plot_pattern(r, R, X, Y, ps, d, inclusion_mask):
 	c = plt.Circle((X, Y), R, fill=False)
 	ax.add_artist(c)
 
+	# plot centroid of pattern
+	ax.plot(X, Y, 'kx')
+
+	# plot centroid of closest cell
+	ax.plot(ps[0, np.argmin(d)], ps[1, np.argmin(d)], 'bx')
+
 	ax.set_aspect(1)
 	ax.set_xlim(-r, 2*R+2*r)
 	ax.set_ylim(-sqrt(3)*r, 2*R+2*r)
@@ -53,6 +59,7 @@ def solve(R, r, precision):
 	X_best = None
 	Y_best = None
 	n_best = 0
+	dsum_best = None
 	X_test = np.arange(X_init-2*r, X_init+2*r, dx)						# test points to move the container to
 	Y_test = np.arange(Y_init-2*sqrt(3)*r, Y_init+2*sqrt(3)*r, dx)
 
@@ -60,6 +67,7 @@ def solve(R, r, precision):
 		for Y in Y_test:
 			# calculate distance matrix and determine which ones are inside
 			d = ((X-ps[0,:])**2 + (Y-ps[1,:])**2)**0.5
+			dsum = sum(d)
 			inclusion_mask = d+r<R
 			n = sum(inclusion_mask)		# number of cells inside container
 			#print(X, Y, n)
@@ -67,7 +75,12 @@ def solve(R, r, precision):
 				X_best = X
 				Y_best = Y
 				n_best = n
-				#print('improved')
+				dsum_best = dsum
+			elif n==n_best and dsum<dsum_best:
+				X_best = X
+				Y_best = Y
+				n_best = n
+				dsum_best = dsum
 
 	X = X_best
 	Y = Y_best
@@ -79,13 +92,22 @@ def solve(R, r, precision):
 if __name__=="__main__":
 
 	# settings
-	R = 260
-	r = 18.2
-	precision = 0.01
+	R = 260/2			# internal radius of tube
+	r = 18.5/2			# radius of cell
+	precision = 0.01	# simulation step dimenison
 
 	# solve
 	X, Y, d, inclusion_mask, ps = solve(R, r, precision)
 
+	# determine coords to nearest cell (used for CAD location of pattern)
+	closest_x = ps[0, np.argmin(d)] - X
+	closest_y = ps[1, np.argmin(d)] - Y
+
 	# plot the pattern
 	print(f'Can fit {sum(inclusion_mask)} cells in this container')
+	#print(f'min(d)={min(d)}, ps[:, np.argmin(d)]={ps[:, np.argmin(d)]}')
+	#print(f'X={X}, Y={Y}')
+	print(f'closest_x={closest_x} closest_y={closest_y}')
 	plot_pattern(r, R, X, Y, ps, d, inclusion_mask)
+
+	
