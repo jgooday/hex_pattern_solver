@@ -41,10 +41,10 @@ def solve(R, r, precision):
 	# create a matrix of the position of small circles
 	# this needs to be bigger than the big circle
 
-	x1s = np.arange(0, R*2+r*2, r*2)					# x positions of cells on 1st, 3rd... rows
-	x2s = np.arange(r, R*2+r*2, r*2)					# corresponding y positions
-	y1s = np.arange(0, R*2+r*2, 2*sqrt(3)*r)			# x positions of cells on 2nd, 4th... rows
-	y2s = np.arange(sqrt(3)*r, R*2+r*2, 2*sqrt(3)*r)	# corresponding y positions
+	x1s = np.arange(0, R*2+r*3, r*2)					# x positions of cells on 1st, 3rd... rows
+	x2s = np.arange(r, R*2+r*3, r*2)					# corresponding y positions
+	y1s = np.arange(0, R*2+r*3, 2*sqrt(3)*r)			# x positions of cells on 2nd, 4th... rows
+	y2s = np.arange(sqrt(3)*r, R*2+r*3, 2*sqrt(3)*r)	# corresponding y positions
 
 	p1x, p1y = np.meshgrid(x1s, y1s)				# first set of individual x values
 	p2x, p2y = np.meshgrid(x2s, y2s)				# y values
@@ -76,13 +76,13 @@ def solve(R, r, precision):
 				Y_best = Y
 				n_best = n
 				dsum_best = dsum
-				print(f'n_best={n_best}')
+				#print(f'n_best={n_best}')
 			elif n==n_best and dsum<dsum_best:
 				X_best = X
 				Y_best = Y
 				n_best = n
 				dsum_best = dsum
-				print(f'  dsum_best={dsum_best}')
+				#print(f'  dsum_best={dsum_best}')
 
 	X = X_best
 	Y = Y_best
@@ -94,7 +94,7 @@ def solve(R, r, precision):
 if __name__=="__main__":
 
 	# settings
-	R = (368.3-5)/2			# internal radius of tube
+	R = (246.063-5)/2			# internal radius of tube
 	r = 18.5/2			# radius of cell
 	precision = 0.01	# simulation step dimenison
 
@@ -110,6 +110,6 @@ if __name__=="__main__":
 	#print(f'min(d)={min(d)}, ps[:, np.argmin(d)]={ps[:, np.argmin(d)]}')
 	#print(f'X={X}, Y={Y}')
 	print(f'dx={dx} dy={dy}')
-	#plot_pattern(r, R, X, Y, ps, d, inclusion_mask)
+	plot_pattern(r, R, X, Y, ps, d, inclusion_mask)
 
 	
