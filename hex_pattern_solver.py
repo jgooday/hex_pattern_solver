@@ -76,11 +76,13 @@ def solve(R, r, precision):
 				Y_best = Y
 				n_best = n
 				dsum_best = dsum
+				print(f'n_best={n_best}')
 			elif n==n_best and dsum<dsum_best:
 				X_best = X
 				Y_best = Y
 				n_best = n
 				dsum_best = dsum
+				print(f'  dsum_best={dsum_best}')
 
 	X = X_best
 	Y = Y_best
@@ -92,7 +94,7 @@ def solve(R, r, precision):
 if __name__=="__main__":
 
 	# settings
-	R = 260/2			# internal radius of tube
+	R = (368.3-5)/2			# internal radius of tube
 	r = 18.5/2			# radius of cell
 	precision = 0.01	# simulation step dimenison
 
@@ -100,14 +102,14 @@ if __name__=="__main__":
 	X, Y, d, inclusion_mask, ps = solve(R, r, precision)
 
 	# determine coords to nearest cell (used for CAD location of pattern)
-	closest_x = ps[0, np.argmin(d)] - X
-	closest_y = ps[1, np.argmin(d)] - Y
+	dx = ps[0, np.argmin(d)] - X
+	dy = ps[1, np.argmin(d)] - Y
 
 	# plot the pattern
 	print(f'Can fit {sum(inclusion_mask)} cells in this container')
 	#print(f'min(d)={min(d)}, ps[:, np.argmin(d)]={ps[:, np.argmin(d)]}')
 	#print(f'X={X}, Y={Y}')
-	print(f'closest_x={closest_x} closest_y={closest_y}')
-	plot_pattern(r, R, X, Y, ps, d, inclusion_mask)
+	print(f'dx={dx} dy={dy}')
+	#plot_pattern(r, R, X, Y, ps, d, inclusion_mask)
 
 	
